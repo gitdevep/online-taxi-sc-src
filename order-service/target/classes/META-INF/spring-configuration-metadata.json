@@ -1,0 +1,11 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.online.taxi.utils.ServicesConfig",
+      "name": "services",
+      "type": "com.online.taxi.utils.ServicesConfig"
+    }
+  ],
+  "properties": []
+}

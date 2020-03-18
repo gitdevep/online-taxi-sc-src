@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.DiscountCouponsMapper">
+    <resultMap id="BaseResultMap" type="com.online.taxi.response.DiscountCouponsResponse">
+        <result column="day" property="day" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Day_List" >
+        <foreach collection="list" item="item" separator=" UNION ALL" open="(" close=")">
+            select #{item} day
+        </foreach>
+    </sql>
+
+    <select id="discountCoupons" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select t.count,d.day,t.type from <include refid="Day_List" /> d left join
+        (
+        select count(*) as count
+        <if test = "period == 1">
+            ,DATE_FORMAT( create_time, '%Y-%m-%d' ) AS day
+        </if>
+        <if test = "period == 2">
+            ,DATE_FORMAT( create_time, '%Y-%m' ) AS day
+        </if>
+        ,"1" as type from tbl_user_coupon
+        <where>
+            <if test = "period == 1">
+                <![CDATA[ DATE_FORMAT( create_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                <![CDATA[ AND DATE_FORMAT( create_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+            </if>
+            <if test = "period == 2">
+                <![CDATA[ DATE_FORMAT( create_time, '%Y-%m' ) >= #{begin} ]]>
+                <![CDATA[ AND DATE_FORMAT( create_time, '%Y-%m' ) <= #{end}]]>
+            </if>
+        </where>
+        GROUP BY
+        <if test = "period == 1">
+            DATE_FORMAT( create_time, '%Y-%m-%d' )
+        </if>
+        <if test = "period == 2">
+            DATE_FORMAT( create_time, '%Y-%m' )
+        </if>
+        UNION
+        select count(*) as count
+        <if test = "period == 1">
+            ,DATE_FORMAT( create_time, '%Y-%m-%d' ) AS day
+        </if>
+        <if test = "period == 2">
+            ,DATE_FORMAT( create_time, '%Y-%m' ) AS day
+        </if>
+        ,"2" as type from tbl_user_coupon
+        where is_use = 1
+        <if test = "period == 1">
+            <![CDATA[ AND DATE_FORMAT( create_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+            <![CDATA[ AND DATE_FORMAT( create_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+        </if>
+        <if test = "period == 2">
+            <![CDATA[ AND DATE_FORMAT( create_time, '%Y-%m' ) >= #{begin} ]]>
+            <![CDATA[ AND DATE_FORMAT( create_time, '%Y-%m' ) <= #{end}]]>
+        </if>
+        GROUP BY
+        <if test = "period == 1">
+            DATE_FORMAT( create_time, '%Y-%m-%d' )
+        </if>
+        <if test = "period == 2">
+            DATE_FORMAT( create_time, '%Y-%m' )
+        </if>
+        ) t on d.day = t.day
+    </select>
+</mapper>

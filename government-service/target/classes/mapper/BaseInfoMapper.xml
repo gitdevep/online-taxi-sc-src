@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.BaseInfoMapper">
+    <select id="getBaseInfoDriver" resultType="com.online.taxi.dto.baseinfo.BaseInfoDriverDto">
+        SELECT
+        t.id,
+        t.phone_number,
+        t.gender,
+        t1.birthday,
+        t1.national,
+        t1.address,
+        t1.driving_licence_number,
+        t1.first_get_driver_license_date,
+        t1.driver_license_validity_start,
+        t1.driver_license_validity_end,
+        t1.is_taxi_driver,
+        t1.network_reservation_taxi_driver_license_number,
+        t1.network_reservation_taxi_driver_license_issuing_agencies,
+        t1.certificate_issuing_date,
+        t1.first_qualification_date,
+        t1.qualification_certificate_validity_start,
+        t1.qualification_certificate_validity_end,
+        t1.reported_date,
+        t1.service_type,
+        t1.company,
+        t1.contract_start_date,
+        t1.contract_end_date,
+        t1.training_courses,
+        t1.training_courses_date,
+        t1.training_courses_start_date,
+        t1.training_courses_end_date,
+        t1.training_courses_time
+        FROM tbl_driver_info t
+        JOIN tbl_driver_base_info t1 ON t.id = t1.id
+        WHERE t.id = #{id}
+    </select>
+
+    <select id="getBaseInfoVehicle" resultType="com.online.taxi.dto.baseinfo.BaseInfoVehicleDto">
+        SELECT
+        t1.id,
+        t1.plate_number,
+        t2.plate_color,
+        t3.seats,
+        t3.brand,
+        t3.model,
+        t2.car_base_type,
+        t2.car_owner,
+        t1.color,
+        t2.engine_number,
+        t2.vin_number,
+        t2.register_time,
+        t2.fuel_type,
+        t2.engine_capacity,
+        t2.transport_issuing_authority,
+        t2.business_area,
+        t2.transport_certificate_validity_start,
+        t2.transport_certificate_validity_end,
+        t2.first_register_time,
+        t2.state_of_repair,
+        t2.annual_audit_status,
+        t2.invoice_printing_equipment_number,
+        t2.gps_brand,
+        t2.gps_model,
+        t2.gps_install_time,
+        t2.report_time,
+        t2.service_type,
+        t2.charge_type_code,
+        t1.use_status
+        FROM
+        tbl_car_info t1
+        LEFT JOIN tbl_car_base_info t2 ON t1.id = t2.id
+        LEFT JOIN tbl_car_type t3 ON t1.car_type_id = t3.id
+        WHERE
+        t1.id = #{id};
+    </select>
+
+    <select id="getDriverOrderMessageStatistical"
+            resultType="com.online.taxi.dto.baseinfo.DriverOrderMessageStatisticalDto">
+        select t2.driver_id,t1.driving_licence_number,t2.count as orderCount from (select id from tbl_driver_info where sign_status=1) t
+        join tbl_driver_base_info t1 on t.id = t1.id
+        join (select driver_id,count(*) as count from tbl_order where status = 8 and DATE_FORMAT(create_time, '%Y%m') =#{cycle} group by driver_id) t2
+        on t.id = t2.driver_id
+    </select>
+
+    <select id="getVehicleTotalMile" resultType="com.online.taxi.dto.baseinfo.BaseInfoVehicleTotalMileDto">
+        select id, plate_number,total_mile from tbl_car_info where id = #{id}
+    </select>
+
+    <select id="getBaseInfoCompanyFareById" resultType="com.online.taxi.dto.baseinfo.BaseInfoCompanyFareDto">
+        SELECT * FROM tbl_charge_rule WHERE id = #{id}
+    </select>
+
+    <select id="getBaseInfoCompanyDto" resultType="com.online.taxi.dto.baseinfo.BaseInfoCompanyDto"
+            parameterType="java.lang.Integer">
+        select
+        *
+        from tbl_base_info_company
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getBaseInfoCompanyServiceDto"
+            resultType="com.online.taxi.dto.baseinfo.BaseInfoCompanyServiceDto"
+            parameterType="java.lang.Integer">
+        select
+        *
+        from tbl_base_info_company_service
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getBaseInfoCompanyPermitDto" resultType="com.online.taxi.dto.baseinfo.BaseInfoCompanyPermitDto"
+            parameterType="java.lang.Integer">
+        select
+        *
+        from tbl_base_info_company_permit
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getBaseInfoCompanyStatDto" resultType="com.online.taxi.dto.baseinfo.BaseInfoCompanyStatDto">
+        select (select count(*) as count from tbl_car_info) as vehicleNum,(select count(*) as count1 from tbl_driver_info) as driverNum
+    </select>
+
+    <select id="getBaseInfoCompanyPayDto" resultType="com.online.taxi.dto.baseinfo.BaseInfoCompanyPayDto"
+            parameterType="java.lang.Integer">
+        select
+        *
+        from tbl_base_info_company_pay
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getCarInsurance" resultType="com.online.taxi.dto.baseinfo.BaseInfoVehicleInsuranceDto"
+            parameterType="java.lang.Integer">
+        select
+        *
+        from tbl_car_insurance
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getPassenger" resultType="com.online.taxi.dto.baseinfo.BaseInfoPassengerDto"
+            parameterType="java.lang.Integer">
+        select
+        *
+        from tbl_passenger_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+</mapper>

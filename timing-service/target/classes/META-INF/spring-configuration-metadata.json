@@ -1,0 +1,21 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.online.taxi.utils.AliPhoneConfig",
+      "name": "apikey",
+      "type": "com.online.taxi.utils.AliPhoneConfig"
+    },
+    {
+      "sourceType": "com.online.taxi.utils.OssApiConfig",
+      "name": "apikey",
+      "type": "com.online.taxi.utils.OssApiConfig"
+    },
+    {
+      "sourceType": "com.online.taxi.utils.ServicesConfig",
+      "name": "services",
+      "type": "com.online.taxi.utils.ServicesConfig"
+    }
+  ],
+  "properties": []
+}

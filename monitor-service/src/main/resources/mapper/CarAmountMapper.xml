@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.CarAmountMapper">
+    <resultMap id="BaseResultMap" type="com.online.taxi.response.CarAmountResponse">
+        <result column="day" property="day" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Day_List" >
+        <foreach collection="list" item="item" separator=" UNION ALL" open="(" close=")">
+            select #{item} day
+        </foreach>
+    </sql>
+
+    <select id="carAmount" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select q.count,d.day,q.type from
+        <include refid="Day_List" /> d left join
+        (
+          SELECT
+        <if test = "period != null">
+            <if test = "period == 1">
+                DATE_FORMAT( order_start_time, '%Y-%m-%d' ) AS day,
+            </if>
+            <if test = "period == 2">
+                DATE_FORMAT( order_start_time, '%Y-%m' ) AS day,
+            </if>
+        </if>
+        sum(time)/count(driver_id) as count,'2' as type  FROM (
+          SELECT driver_id,	order_start_time,round( ( UNIX_TIMESTAMP( passenger_getoff_time ) - UNIX_TIMESTAMP( order_start_time ) ) / 60 ) AS time
+        FROM
+            tbl_order
+        WHERE
+            STATUS = 8
+          <if test = "period != null">
+            <if test = "period == 1">
+                <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+            </if>
+            <if test = "period == 2">
+                <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m' ) >= #{begin} ]]>
+                <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m' ) <= #{end}]]>
+            </if>
+          </if>
+        UNION
+        SELECT
+            driver_id,
+            order_start_time,
+            round( ( UNIX_TIMESTAMP( driver_arrived_time ) - UNIX_TIMESTAMP( order_start_time ) ) / 60 ) AS time
+        FROM
+            tbl_order
+        WHERE
+            STATUS = 9
+            AND driver_arrived_time IS NOT NULL
+            <if test = "period != null">
+                <if test = "period == 1">
+                    <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                    <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+                </if>
+                <if test = "period == 2">
+                    <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m' ) >= #{begin} ]]>
+                    <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m' ) <= #{end}]]>
+                </if>
+            </if>
+            ) t
+        group by
+        <if test = "period != null">
+            <if test = "period == 1">
+                DATE_FORMAT( order_start_time, '%Y-%m-%d' )
+            </if>
+            <if test = "period == 2">
+                DATE_FORMAT( order_start_time, '%Y-%m' )
+            </if>
+        </if>
+        union
+        select t1.day,count(t1.driver_id) as count,'1' as type from (SELECT driver_id
+        <if test = "period != null">
+            <if test = "period == 1">
+                ,DATE_FORMAT( order_start_time, '%Y-%m-%d' ) AS day
+            </if>
+            <if test = "period == 2">
+                ,DATE_FORMAT( order_start_time, '%Y-%m' ) AS day
+            </if>
+        </if>
+        FROM tbl_order WHERE status <![CDATA[ >= ]]>2 and status <![CDATA[ <= ]]> 8
+        <if test = "period != null">
+            <if test = "period == 1">
+                <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+            </if>
+            <if test = "period == 2">
+                <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m' ) >= #{begin} ]]>
+                <![CDATA[ AND DATE_FORMAT( order_start_time, '%Y-%m' ) <= #{end}]]>
+            </if>
+        </if>
+        )t1 group by day
+        ) q on d.day = q.day
+    </select>
+</mapper>

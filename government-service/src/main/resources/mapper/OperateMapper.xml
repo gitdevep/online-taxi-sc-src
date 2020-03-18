@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.OperateMapper">
+    <select id="selectDriverLoginLogout" resultType="com.online.taxi.dto.operate.OperateDto">
+        SELECT w.id,c.plate_number,b.driving_licence_number,w.work_start,w.work_end
+        FROM tbl_driver_info d
+        JOIN tbl_driver_base_info b ON d.id = b.id
+        JOIN tbl_car_info c ON d.car_id = c.id
+        JOIN tbl_driver_work_time w ON d.id = w.driver_id
+        where w.id = #{id}
+    </select>
+
+
+    <select id="selectDeparture" resultType="com.online.taxi.dto.operate.OperateDto">
+        SELECT
+        t1.id,
+        t1.order_number,
+        t2.driving_licence_number,
+        t4.rule_id,
+        t1.plate_number,
+        t1.receive_passenger_longitude,
+        t1.receive_passenger_latitude,
+        t1.receive_passenger_time
+        FROM
+        tbl_order t1
+        INNER JOIN tbl_driver_base_info t2 ON t1.driver_id = t2.id
+        INNER JOIN tbl_car_info t3 ON t1.car_id = t3.id
+        INNER JOIN tbl_order_rule_mirror t4 ON t1.id = t4.order_id
+        WHERE
+        t1.id = #{id}
+        AND t1.status = 5
+    </select>
+
+    <select id="selectArrival" resultType="com.online.taxi.dto.operate.OperateDto">
+        SELECT
+        t1.id,
+        t1.order_number,
+        t1.passenger_getoff_longitude,
+        t1.passenger_getoff_latitude,
+        t1.passenger_getoff_time,
+        t2.total_distance,
+        t2.total_time
+        FROM
+        tbl_order t1
+        INNER JOIN tbl_order_rule_price t2 ON t1.id = t2.order_id
+        WHERE
+        t1.id = #{id}
+        AND t2.category = 1
+        AND t1.status = 6
+    </select>
+
+    <select id="selectOperatorPay" resultType="com.online.taxi.dto.operate.OperatePayDto">
+        SELECT
+        t2.order_number,
+        t3.city_code,
+        t4.driving_licence_number,
+        t5.rule_id,
+        t2.plate_number,
+        t2.order_start_time,
+        t2.receive_passenger_longitude,
+        t2.receive_passenger_latitude,
+        t2.receive_passenger_time,
+        t2.passenger_getoff_longitude,
+        t2.passenger_getoff_latitude,
+        t2.passenger_getoff_time,
+        t3.total_distance,
+        t3.total_time,
+        t1.total_price,
+        t3.beyond_price,
+        t2.invoice_type,
+        t3.road_price,
+        t3.parking_price,
+        t3.other_price
+        FROM
+        `tbl_order_payment` t1
+        INNER JOIN tbl_order t2 ON t1.order_id = t2.id
+        INNER JOIN tbl_order_rule_price t3 ON t2.id = t3.order_id
+        INNER JOIN tbl_driver_base_info t4 ON t2.driver_id = t4.id
+        INNER JOIN tbl_order_rule_mirror t5 ON t2.id = t5.order_id
+        WHERE t1.order_id = #{id}
+        AND t3.category = 1
+        AND t2.status = 8
+    </select>
+</mapper>

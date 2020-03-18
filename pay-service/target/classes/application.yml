@@ -1,0 +1,86 @@
+#common 通用
+server:
+  port: 8087
+
+spring:
+  redis:
+    host: 192.168.68.123
+    password:
+    port: 6379
+  datasource:
+    url: jdbc:mysql://192.168.68.123:3306/online-taxi?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: dev1101
+    password: dev1101
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      driver-class-name: com.mysql.jdbc.Driver
+      filters: stat,wall,slf4j
+      initialSize: 5
+      maxActive: 20
+      maxPoolPreparedStatementPerConnectionSize: 20
+      maxWait: 60000
+      minEvictableIdleTimeMillis: 300000
+      minIdle: 5
+      poolPreparedStatements: true
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      useGlobalDataSourceStat: true
+      validationQuery: SELECT 'x'
+  activemq:
+    broker-url: tcp://192.168.33.239:61617
+    in-memory: false
+    pool:
+      enabled: true
+      max-connections: 100
+
+
+#internal 程序内部
+logging:
+  config: classpath:log/logback-spring.xml
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+#customer
+
+#支付宝
+alipay:
+  #商户秘钥
+  app-private-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxELHisAVmEjvvr2Ea9x2t60GYMZ5kYfTIpKtpSUJjipUX6vTMmBTU44CzIJfC74zNbDNRGdbbWDqnnpGbnENi8p9gbLic11wfFVcSi5RfHOt1iGjsSUO9jAa0tUXcZkGz3zlENxNr28wADaTVchkQvLCcvv73XEgkAmlZtStsVBFYc7uMQCj6G2LN7Xo79JlGHMLrnzZ8LXhlsI76Td6Om3CRbIZAxGeWVC2CQijYeogP8GytH9RFsb5pXRR90sxOOMK4YYrTo3WO9sEYC9TIaXqhYggbRQDaxdNm7K6STZK6J5ScsECQ1EFdBng/BwWw8zhyb+HcUqCV44cCWl0/FAgMBAAECggEACss/oIc6e7a6WdG+oraUTV+mHcydeeF5nxZCiQDySJY7cX5zkAX9VbHQBPtBcbUgoEPmcjIL619HLf23w8MDie3aUDSL58R7IvqDJUthsY6lm75BvdJCObpf4vx2hyuRM1lg0FcijS/1sjpZu0uP+OB/D3uHYIwXfrb/Rmg2AcPwlurZMcZqd2km3MwIQNoeBy23EWu0D1ylvyZ70wWDxCF2E/WLuYrLzBL6q90LSAROIqG7szlir96ap8zq5Rboa9hNMppBTDfLEe8ANvFEXi9+5aADQh62Lz2tu7Qtba0enX4TBtnkzR1hnGv2F/K8rpyflIMSBxYAT8NFtwA9gQKBgQDxEg+nP3T7CNJrV+5310n/ZbEbGF+SAPKWucc0ZpvoXypZekqm6RTNNFO8V+h/JpWqfwXgBlm+Z2YGmq/sBZipHpFRrX8npW55uguT0sWr8fV3G3GM0aRJtiRvYSYp3yyR5Zo3LnyOEjd+h80/Y0azYNFY+FKuvfIg6JsxQltuNQKBgQDQUp1YKuneseBaLJp4NAhqddsv/KskQC6peR/8FTGTsPXuRhoXxn34y5PO5iiFDoLlj9WpLsmeLtTc+PT956m2xVSaQlHhthSFFPXmuhcmyEvd0D0jqW0MgYANrcyazZh/2KLugUYWRwpZGEQ2LdyBY6IFlPoVbQAtVId7/+XNUQKBgArFM83VF/TfQAdrtkvEYpn2gSMkw6BSSoRRaIT+0JhhKBM3U36Bi1xfqh4QD2Me5jDn2+tWXUwUcop4/sMcvOVRaEyt47Bxw63MkhfYotw7wyu/HiOceiqQ6K/RN1NHlUYva+RrP0VZqwEMMC9U0CPTf4bqEUedVOQDgGuC+3LBAoGAY3YuPXwvsO2ISkVlcuKU6g9fGSgvpd0m6i80gCy2QOeKY7sAlj1kw7ae2Xe1/OESyfvEbUQzaty9MMuEXP2QX/0TCZuEcJl4bpm1VfWfPBsBbeQQbMhlkkT6GI3UVEy49ME/+VOrXNOKM0OMvbljwDsLjlK0nCownXPwQ9nHpCECgYEA6LWaQHI65QGM+bAvBj1oCEZMMiCNCZL4voQ2hRaknrd/7v6Hp4t7SlhYqQpkf8HEDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  #支付宝公钥
+  public-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxH2Q4yyw1ItQkgVXqklfma9Fsgr7QQefjlRlxf6trZGqLgh5IdPZSw4omJY+qRMpEW8HUUIAbmQ4BvdWzF4a7to42di4DPeMRIF9I+t6g1X4Jl0dKk986Mx6lLwqrSAZLIzgYKM/YNcoqHvnV1mc1UOtvcpr2srDHwT9O7MczndJI7VzoVwWKcktA/IVpOFXhe+taQandVWGjZ9OLJ5P6sIFE77ltbIcZO2wtTvuE9wTxO43kCfTVu9ALRP6B/ihpBZrxuasYz8q6kCQfvglxld0SPLarp9RqkAPs9OlX5Vbnjw46qiyCPMowIDAQAB
+  #商户APPID
+  app-id: 20180320xxxxxxxxx
+  #商家和支付宝签约的产品码，为固定值QUICK_MSECURITY_PAY
+  product-code: QUICK_MSECURITY_PAY
+  #支付宝网关地址
+  gateway: https://openapi.alipay.com/gateway.do
+  #交易关闭时间
+  close-trade-time: https://api.mch.weixin.qq.com/pay/orderquery
+  seller-id: 20880314xxxxxxxx
+#微信支付
+wxpay:
+  appId: wx2cdaecxxxxxxxxxx
+  mchId: 1504000000
+  key: P5SexchkWHZdWJTrBZsyHsxxxxxxxxxx
+  unifiedorder.api: https://api.mch.weixin.qq.com/pay/unifiedorder
+  query.api: https://api.mch.weixin.qq.com/pay/orderquery
+
+services:
+  address:
+    - account: http://192.168.33.239:8081
+    - dispatch: http://192.168.33.239:8082
+    - order: http://192.168.33.239:8083
+    - map: http://192.168.33.239:8084
+    - message: http://192.168.33.239:8085
+    - netty: http://192.168.33.239:8086
+    - pay: http://192.168.33.239:8087
+    - valuation: http://192.168.33.239:8088
+    - file: http://192.168.33.239:8089
+    - government: http://192.168.33.239:9999

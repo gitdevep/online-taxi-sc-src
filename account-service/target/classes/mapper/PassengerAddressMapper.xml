@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.online.taxi.mapper.PassengerAddressMapper" >
+  <resultMap id="BaseResultMap" type="com.online.taxi.entity.PassengerAddress" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="passenger_info_id" property="passengerInfoId" jdbcType="INTEGER" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="address_name" property="addressName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="address_desc" property="addressDesc" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, passenger_info_id, latitude, longitude, address_name, type, address_desc,create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_passenger_address
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPassengerInfoId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_passenger_address
+    where passenger_info_id = #{passengerInfoId,jdbcType=INTEGER}
+  </select>
+  <select id="selectPassengerAddressList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_passenger_address
+    where passenger_info_id = #{passengerInfoId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByAddPassengerInfoId" resultMap="BaseResultMap" parameterType="com.online.taxi.entity.PassengerAddress" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_passenger_address
+    where passenger_info_id = #{passengerInfoId,jdbcType=INTEGER}
+    and type = #{type,jdbcType =INTEGER }
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tbl_passenger_address
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.online.taxi.entity.PassengerAddress" >
+    insert into tbl_passenger_address (id, passenger_info_id, latitude,
+      longitude, address_name, type,
+      address_desc, create_time,)
+    values (#{id,jdbcType=INTEGER}, #{passengerInfoId,jdbcType=INTEGER}, #{latitude,jdbcType=DOUBLE},
+      #{longitude,jdbcType=DOUBLE}, #{addressName,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{addressDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.online.taxi.entity.PassengerAddress" >
+    insert into tbl_passenger_address
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="passengerInfoId != null" >
+        passenger_info_id,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="addressName != null" >
+        address_name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="addressDesc != null" >
+        address_desc,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="passengerInfoId != null" >
+        #{passengerInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="addressName != null" >
+        #{addressName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="addressDesc != null" >
+        #{addressDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.online.taxi.entity.PassengerAddress" >
+    update tbl_passenger_address
+    <set >
+      <if test="passengerInfoId != null" >
+        passenger_info_id = #{passengerInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="addressName != null" >
+        address_name = #{addressName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="addressDesc != null" >
+        address_desc = #{addressDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePassengerAddress" parameterType="com.online.taxi.entity.PassengerAddress" >
+    update tbl_passenger_address
+    <set >
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="addressName != null" >
+        address_name = #{addressName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="addressDesc != null" >
+        address_desc = #{addressDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where passenger_info_id = #{passengerInfoId,jdbcType=INTEGER}
+    and type = #{type,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.online.taxi.entity.PassengerAddress" >
+    update tbl_passenger_address
+    set passenger_info_id = #{passengerInfoId,jdbcType=INTEGER},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      address_name = #{addressName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      address_desc = #{addressDesc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.online.taxi.mapper.SmsMapper" >
+  <resultMap id="BaseResultMap" type="com.online.taxi.entity.Sms" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="passenger_phone_number" property="passengerPhoneNumber" jdbcType="VARCHAR" />
+    <result column="sms_content" property="smsContent" jdbcType="VARCHAR" />
+    <result column="send_time" property="sendTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="send_flag" property="sendFlag"/>
+    <result column="send_number" property="sendNumber" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, passenger_phone_number, sms_content, send_time, operator, send_flag, send_number,create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_sms
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tbl_sms
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.online.taxi.entity.Sms" >
+    insert into tbl_sms
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="passengerPhoneNumber != null" >
+        passenger_phone_number,
+      </if>
+      <if test="smsContent != null" >
+        sms_content,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="sendFlag != null" >
+        send_flag,
+      </if>
+      <if test="sendNumber != null" >
+        send_number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="passengerPhoneNumber != null" >
+        #{passengerPhoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="smsContent != null" >
+        #{smsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="sendFlag != null" >
+        #{sendFlag},
+      </if>
+      <if test="sendNumber != null" >
+        #{sendNumber},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.online.taxi.entity.Sms" >
+    update tbl_sms
+    <set >
+      <if test="passengerPhoneNumber != null" >
+        passenger_phone_number = #{passengerPhoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="smsContent != null" >
+        sms_content = #{smsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="sendFlag != null" >
+        send_flag = #{sendFlag},
+      </if>
+      <if test="sendNumber != null" >
+        send_number = #{sendNumber},
+      </if>
+
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

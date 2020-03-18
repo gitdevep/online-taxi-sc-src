@@ -1,0 +1,11 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.online.taxi.utils.HuaXinSmsConfig",
+      "name": "huaxin",
+      "type": "com.online.taxi.utils.HuaXinSmsConfig"
+    }
+  ],
+  "properties": []
+}

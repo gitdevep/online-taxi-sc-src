@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.CarDispatchDistributeRadiusSetMapper">
+    <resultMap id="BaseResultMap" type="com.online.taxi.entity.CarDispatchDistributeRadiusSet">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="service_type_id" jdbcType="INTEGER" property="serviceTypeId"/>
+        <result column="min_radius" jdbcType="INTEGER" property="minRadius"/>
+        <result column="min_radius_first_push_driver_count" jdbcType="INTEGER"
+                property="minRadiusFirstPushDriverCount"/>
+        <result column="max_radius" jdbcType="INTEGER" property="maxRadius"/>
+        <result column="max_radius_first_push_driver_count" jdbcType="INTEGER"
+                property="maxRadiusFirstPushDriverCount"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, city_code, service_type_id, min_radius, min_radius_first_push_driver_count, max_radius,
+        max_radius_first_push_driver_count, create_time, update_time
+    </sql>
+    <select id="getCarDispatchDistributeRadiusSet" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_car_dispatch_distribute_radius_set
+        where city_code = #{cityCode} and service_type_id = #{serviceTypeId} limit 1
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_car_dispatch_distribute_radius_set
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from tbl_car_dispatch_distribute_radius_set
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.online.taxi.entity.CarDispatchDistributeRadiusSet">
+        insert into tbl_car_dispatch_distribute_radius_set (id, city_code, service_type_id,
+        min_radius, min_radius_first_push_driver_count,
+        max_radius, max_radius_first_push_driver_count,
+        create_time, update_time)
+        values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER},
+        #{minRadius,jdbcType=INTEGER}, #{minRadiusFirstPushDriverCount,jdbcType=INTEGER},
+        #{maxRadius,jdbcType=INTEGER}, #{maxRadiusFirstPushDriverCount,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.online.taxi.entity.CarDispatchDistributeRadiusSet">
+        insert into tbl_car_dispatch_distribute_radius_set
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="serviceTypeId != null">
+                service_type_id,
+            </if>
+            <if test="minRadius != null">
+                min_radius,
+            </if>
+            <if test="minRadiusFirstPushDriverCount != null">
+                min_radius_first_push_driver_count,
+            </if>
+            <if test="maxRadius != null">
+                max_radius,
+            </if>
+            <if test="maxRadiusFirstPushDriverCount != null">
+                max_radius_first_push_driver_count,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceTypeId != null">
+                #{serviceTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="minRadius != null">
+                #{minRadius,jdbcType=INTEGER},
+            </if>
+            <if test="minRadiusFirstPushDriverCount != null">
+                #{minRadiusFirstPushDriverCount,jdbcType=INTEGER},
+            </if>
+            <if test="maxRadius != null">
+                #{maxRadius,jdbcType=INTEGER},
+            </if>
+            <if test="maxRadiusFirstPushDriverCount != null">
+                #{maxRadiusFirstPushDriverCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.online.taxi.entity.CarDispatchDistributeRadiusSet">
+        update tbl_car_dispatch_distribute_radius_set
+        <set>
+            <if test="cityCode != null">
+                city_code = #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceTypeId != null">
+                service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="minRadius != null">
+                min_radius = #{minRadius,jdbcType=INTEGER},
+            </if>
+            <if test="minRadiusFirstPushDriverCount != null">
+                min_radius_first_push_driver_count = #{minRadiusFirstPushDriverCount,jdbcType=INTEGER},
+            </if>
+            <if test="maxRadius != null">
+                max_radius = #{maxRadius,jdbcType=INTEGER},
+            </if>
+            <if test="maxRadiusFirstPushDriverCount != null">
+                max_radius_first_push_driver_count = #{maxRadiusFirstPushDriverCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.online.taxi.entity.CarDispatchDistributeRadiusSet">
+        update tbl_car_dispatch_distribute_radius_set
+        set city_code = #{cityCode,jdbcType=VARCHAR},
+        service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+        min_radius = #{minRadius,jdbcType=INTEGER},
+        min_radius_first_push_driver_count = #{minRadiusFirstPushDriverCount,jdbcType=INTEGER},
+        max_radius = #{maxRadius,jdbcType=INTEGER},
+        max_radius_first_push_driver_count = #{maxRadiusFirstPushDriverCount,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

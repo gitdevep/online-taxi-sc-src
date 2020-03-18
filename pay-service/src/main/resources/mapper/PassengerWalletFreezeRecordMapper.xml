@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.PassengerWalletFreezeRecordMapper">
+  <resultMap id="BaseResultMap" type="com.online.taxi.entity.PassengerWalletFreezeRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="passenger_info_id" jdbcType="INTEGER" property="passengerInfoId" />
+    <result column="freeze_capital" jdbcType="DOUBLE" property="freezeCapital" />
+    <result column="freeze_give_fee" jdbcType="DOUBLE" property="freezeGiveFee" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="freeze_status" jdbcType="INTEGER" property="freezeStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, passenger_info_id, freeze_capital, freeze_give_fee, order_id, freeze_status,create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_passenger_wallet_freeze_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByOrderIdAndYid" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_passenger_wallet_freeze_record
+    where order_id = #{orderId,jdbcType=INTEGER} and passenger_info_id = #{passengerInfoId} and freeze_status = 1
+  </select>
+  <select id="selectPurseThaw" resultType="com.online.taxi.entity.PassengerWalletFreezeRecord" parameterType="java.util.Date">
+    select t.order_id,t.passenger_info_id from
+    (select order_id,passenger_info_id from tbl_passenger_wallet_freeze_record where freeze_status = 1) t
+    join (select id,start_time from tbl_order where status = 1) t1 on t.order_id = t1.id
+    where round((UNIX_TIMESTAMP(DATE_FORMAT(#{date},'%Y-%m-%d %H:%i:%s'))-UNIX_TIMESTAMP(t1.start_time))/60) >= 3
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_passenger_wallet_freeze_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.online.taxi.entity.PassengerWalletFreezeRecord">
+    insert into tbl_passenger_wallet_freeze_record (id, passenger_info_id, freeze_capital,
+      freeze_give_fee, order_id, freeze_status , create_time,
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{passengerInfoId,jdbcType=INTEGER}, #{freezeCapital,jdbcType=DOUBLE},
+      #{freezeGiveFee,jdbcType=DOUBLE}, #{orderId,jdbcType=INTEGER}, #{freezeStatus,jdbcType=INTEGER} ,#{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.online.taxi.entity.PassengerWalletFreezeRecord">
+    insert into tbl_passenger_wallet_freeze_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="passengerInfoId != null">
+        passenger_info_id,
+      </if>
+      <if test="freezeCapital != null">
+        freeze_capital,
+      </if>
+      <if test="freezeGiveFee != null">
+        freeze_give_fee,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="freezeStatus != null">
+        freeze_status,
+      </if>
+
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="passengerInfoId != null">
+        #{passengerInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="freezeCapital != null">
+        #{freezeCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="freezeGiveFee != null">
+        #{freezeGiveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="freezeStatus != null">
+        #{freezeStatus,jdbcType=INTEGER},
+      </if>
+
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.online.taxi.entity.PassengerWalletFreezeRecord">
+    update tbl_passenger_wallet_freeze_record
+    <set>
+      <if test="passengerInfoId != null">
+        passenger_info_id = #{passengerInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="freezeCapital != null">
+        freeze_capital = #{freezeCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="freezeGiveFee != null">
+        freeze_give_fee = #{freezeGiveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="freezeStatus != null">
+        freeze_status = #{freezeStatus,jdbcType=INTEGER},
+      </if>
+
+
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.online.taxi.entity.PassengerWalletFreezeRecord">
+    update tbl_passenger_wallet_freeze_record
+    set passenger_info_id = #{passengerInfoId,jdbcType=INTEGER},
+      freeze_capital = #{freezeCapital,jdbcType=DOUBLE},
+      freeze_give_fee = #{freezeGiveFee,jdbcType=DOUBLE},
+      order_id = #{orderId,jdbcType=INTEGER},
+      freeze_status = #{freezeStatus,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePassengerWallet" parameterType="java.lang.Integer">
+     update tbl_passenger_wallet_freeze_record
+    set
+    <if test="freezeStatus != null">
+      freeze_status = #{freezeStatus,jdbcType=INTEGER},
+    </if>
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+</mapper>

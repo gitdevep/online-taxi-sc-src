@@ -1,0 +1,33 @@
+syntax = "proto3";
+package com.online.taxi.proto;
+
+option java_outer_classname = "MessageProto";
+
+message RequestProto{
+ int32 code = 1;
+ string message = 2;
+
+}
+
+message PlayerInfoProto{
+  string pid = 1;
+  string passwd = 2;
+  string lastRoomId = 3;
+  string name = 4;
+}
+
+message PlayerStatusProto{
+    string pid = 1;
+}
+
+message PlayerComplexProto{
+    string pid = 1;
+}
+
+
+message PlayerNameProto {
+    string name = 1;
+    string id = 2;
+    int64 time = 3;
+    string passwd =4;
+}

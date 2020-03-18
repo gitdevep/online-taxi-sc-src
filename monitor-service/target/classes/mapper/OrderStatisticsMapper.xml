@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.OrderStatisticsMapper">
+    <resultMap id="BaseResultMap" type="com.online.taxi.response.OrderStatisticsResponse">
+        <result column="day" property="day" jdbcType="VARCHAR"/>
+        <result column="serviceType" property="serviceType" jdbcType="VARCHAR"/>
+        <result column="orderCount" property="orderCount" jdbcType="INTEGER"/>
+        <result column="orderAmount" property="orderAmount" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="Day_List" >
+        <foreach collection="list" item="item" separator=" UNION ALL" open="(" close=")">
+            select #{item} day
+        </foreach>
+    </sql>
+    <select id="orderStatistics" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select service_type as serviceType,d.day,count(id) as orderCount from
+        <include refid="Day_List" /> d left join
+        (
+        SELECT id,service_type
+        <if test="period != null">
+            <if test="period == 1">
+                ,DATE_FORMAT( start_time, '%Y-%m-%d' ) AS start_time
+            </if>
+            <if test="period == 2">
+                ,DATE_FORMAT( start_time, '%Y-%m' ) AS start_time
+            </if>
+        </if>
+        FROM
+        tbl_order
+        WHERE
+        STATUS IN (6,7,8)
+        <if test="period != null">
+            <if test="period == 1">
+                <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+            </if>
+            <if test="period == 2">
+                <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m' ) >= #{begin} ]]>
+                <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m' ) <= #{end}]]>
+            </if>
+        </if>
+        union
+        SELECT id,9 as service_type
+            <if test="period == 1">
+                ,DATE_FORMAT( start_time, '%Y-%m-%d' ) AS start_time
+            </if>
+            <if test="period == 2">
+                ,DATE_FORMAT( start_time, '%Y-%m' ) AS start_time
+            </if>
+        FROM
+        tbl_order
+        WHERE
+        STATUS = 9 AND is_cancel = 1
+            <if test="period == 1">
+                <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+            </if>
+            <if test="period == 2">
+                <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m' ) >= #{begin} ]]>
+                <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m' ) <= #{end}]]>
+            </if>
+        ) t on d.day = t.start_time
+        group by t.service_type,d.day
+    </select>
+
+    <select id="selectOrderFlow" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        d.day,
+        count( t.id ) AS orderCount,
+        sum( t.paid_price ) AS orderAmount
+        FROM
+        <include refid="Day_List" /> d left join
+        (
+        SELECT
+        id,paid_price
+        <if test="period != null">
+            <if test="period == 1">
+                ,DATE_FORMAT( pay_time, '%Y-%m-%d' ) AS pay_time
+            </if>
+            <if test="period == 2">
+                ,DATE_FORMAT( pay_time, '%Y-%m' ) AS pay_time
+            </if>
+        </if>
+        FROM
+        tbl_order_payment
+        WHERE
+            <if test="period == 1">
+                <![CDATA[ DATE_FORMAT( pay_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                <![CDATA[ AND DATE_FORMAT( pay_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+            </if>
+            <if test="period == 2">
+                <![CDATA[ DATE_FORMAT( pay_time, '%Y-%m' ) >= #{begin} ]]>
+                <![CDATA[ AND DATE_FORMAT( pay_time, '%Y-%m' ) <= #{end}]]>
+            </if>
+        ) t on d.day = t.pay_time
+        GROUP BY d.day
+    </select>
+</mapper>

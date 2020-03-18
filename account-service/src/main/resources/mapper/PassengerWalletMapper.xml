@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.PassengerWalletMapper">
+  <resultMap id="BaseResultMap" type="com.online.taxi.entity.PassengerWallet">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="passenger_info_id" jdbcType="INTEGER" property="passengerInfoId" />
+    <result column="capital" jdbcType="DOUBLE" property="capital" />
+    <result column="give_fee" jdbcType="DOUBLE" property="giveFee" />
+    <result column="freeze_capital" jdbcType="DOUBLE" property="freezeCapital" />
+    <result column="freeze_give_fee" jdbcType="DOUBLE" property="freezeGiveFee" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, passenger_info_id, capital, give_fee, freeze_capital, freeze_give_fee, create_time, 
+    update_time
+  </sql>
+
+  <insert id="insertSelective" parameterType="com.online.taxi.entity.PassengerWallet">
+    insert into tbl_passenger_wallet
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="passengerInfoId != null">
+        passenger_info_id,
+      </if>
+      <if test="capital != null">
+        capital,
+      </if>
+      <if test="giveFee != null">
+        give_fee,
+      </if>
+      <if test="freezeCapital != null">
+        freeze_capital,
+      </if>
+      <if test="freezeGiveFee != null">
+        freeze_give_fee,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="passengerInfoId != null">
+        #{passengerInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="capital != null">
+        #{capital,jdbcType=DOUBLE},
+      </if>
+      <if test="giveFee != null">
+        #{giveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="freezeCapital != null">
+        #{freezeCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="freezeGiveFee != null">
+        #{freezeGiveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
+  </insert>
+
+</mapper>

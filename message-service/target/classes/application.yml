@@ -1,0 +1,76 @@
+#common 通用
+server:
+  port: 8085
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.68.123:3306/online-taxi?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: dev1101
+    password: dev1101
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      driver-class-name: com.mysql.jdbc.Driver
+      filters: stat,wall,slf4j
+      initialSize: 5
+      maxActive: 20
+      maxPoolPreparedStatementPerConnectionSize: 20
+      maxWait: 60000
+      minEvictableIdleTimeMillis: 300000
+      minIdle: 5
+      poolPreparedStatements: true
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      useGlobalDataSourceStat: true
+      validationQuery: SELECT 'x'
+  activemq:
+    broker-url: tcp://192.168.33.239:61617
+    in-memory: false
+    pool:
+      enabled: true
+      max-connections: 100
+
+
+
+#internal 程序内部
+logging:
+  config: classpath:log/logback-spring.xml
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+#customer
+#极光
+jpush:
+  passenger:
+    app-key: ab0930f531042cxxxxxxxxxx
+    master-secret: a90118aa817fb8xxxxxxxxxx
+  largeScreen:
+    app-key: ab0930f531042cxxxxxxxxxx
+    master-secret: a90118aa817fb8xxxxxxxxxx
+  driver:
+    app-key: ab0930f531042cxxxxxxxxxx
+    master-secret: a90118aa817fb8xxxxxxxxxx
+  carScreen:
+    app-key: ab0930f531042cxxxxxxxxxx
+    master-secret: a90118aa817fb8xxxxxxxxxx
+#阿里
+ali:
+  #短信
+  sms:
+    key-id: LTAInxh0Pxxxxxxx
+    key-secret: bUgDYFug6LPBDYCBxxxxxxxxxxxxxx
+    sign: 出行
+#华信
+huaxin:
+  #短信
+  sms:
+    wsdl: https://dx.ipyy.net/webservice.asmx?wsdl
+    user-name: 8Mxxxxx
+    pass-word: 8M00xxxxx
+

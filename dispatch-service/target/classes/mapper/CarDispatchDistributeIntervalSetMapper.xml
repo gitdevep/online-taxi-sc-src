@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.CarDispatchDistributeIntervalSetMapper">
+    <resultMap id="BaseResultMap" type="com.online.taxi.entity.CarDispatchDistributeIntervalSet">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="service_type_id" jdbcType="INTEGER" property="serviceTypeId"/>
+        <result column="car_service_before_interval" jdbcType="INTEGER" property="carServiceBeforeInterval"/>
+        <result column="car_service_after_interval" jdbcType="INTEGER" property="carServiceAfterInterval"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, city_code, service_type_id, car_service_before_interval, car_service_after_interval,
+        create_time, update_time
+    </sql>
+    <select id="selectByCityCodeAndServiceType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_car_dispatch_distribute_interval_set
+        where city_code = #{cityCode} and service_type_id = #{serviceTypeId}
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_car_dispatch_distribute_interval_set
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from tbl_car_dispatch_distribute_interval_set
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.online.taxi.entity.CarDispatchDistributeIntervalSet">
+        insert into tbl_car_dispatch_distribute_interval_set (id, city_code, service_type_id,
+        car_service_before_interval, car_service_after_interval,
+        create_time, update_time)
+        values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER},
+        #{carServiceBeforeInterval,jdbcType=INTEGER}, #{carServiceAfterInterval,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.online.taxi.entity.CarDispatchDistributeIntervalSet">
+        insert into tbl_car_dispatch_distribute_interval_set
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="serviceTypeId != null">
+                service_type_id,
+            </if>
+            <if test="carServiceBeforeInterval != null">
+                car_service_before_interval,
+            </if>
+            <if test="carServiceAfterInterval != null">
+                car_service_after_interval,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceTypeId != null">
+                #{serviceTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="carServiceBeforeInterval != null">
+                #{carServiceBeforeInterval,jdbcType=INTEGER},
+            </if>
+            <if test="carServiceAfterInterval != null">
+                #{carServiceAfterInterval,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.online.taxi.entity.CarDispatchDistributeIntervalSet">
+        update tbl_car_dispatch_distribute_interval_set
+        <set>
+            <if test="cityCode != null">
+                city_code = #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceTypeId != null">
+                service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="carServiceBeforeInterval != null">
+                car_service_before_interval = #{carServiceBeforeInterval,jdbcType=INTEGER},
+            </if>
+            <if test="carServiceAfterInterval != null">
+                car_service_after_interval = #{carServiceAfterInterval,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.online.taxi.entity.CarDispatchDistributeIntervalSet">
+        update tbl_car_dispatch_distribute_interval_set
+        set city_code = #{cityCode,jdbcType=VARCHAR},
+        service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+        car_service_before_interval = #{carServiceBeforeInterval,jdbcType=INTEGER},
+        car_service_after_interval = #{carServiceAfterInterval,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

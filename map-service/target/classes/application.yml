@@ -1,0 +1,13 @@
+#common 通用
+server:
+  port: 8084
+
+#internal 程序内部
+logging:
+  config: classpath:log/logback-spring.xml
+
+#customer
+#高德地图
+amap:
+    key: cf1195c703d8a0f9942f82xxxxxxxxxx
+    sid: 1688

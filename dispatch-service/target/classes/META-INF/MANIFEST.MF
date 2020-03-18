@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: dispatch-service
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: cpf
+Implementation-Vendor-Id: com.online.taxi
+Build-Jdk: 1.8.0_221
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/online-taxi/dispatch-service
+Created-By: Maven Integration for Eclipse
+

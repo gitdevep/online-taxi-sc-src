@@ -1,0 +1,16 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.online.taxi.util.ServiceAddress",
+      "name": "services",
+      "type": "com.online.taxi.util.ServiceAddress"
+    },
+    {
+      "sourceType": "com.online.taxi.util.OssConfig",
+      "name": "services",
+      "type": "com.online.taxi.util.OssConfig"
+    }
+  ],
+  "properties": []
+}

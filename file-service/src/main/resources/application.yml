@@ -1,0 +1,65 @@
+#common 通用
+server:
+  port: 8089
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.68.123:3306/online-taxi?&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: dev1101
+    password: dev1101
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      driver-class-name: com.mysql.jdbc.Driver
+      filters: stat,wall,slf4j
+      initialSize: 5
+      maxActive: 20
+      maxPoolPreparedStatementPerConnectionSize: 20
+      maxWait: 60000
+      minEvictableIdleTimeMillis: 300000
+      minIdle: 5
+      poolPreparedStatements: true
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      useGlobalDataSourceStat: true
+      validationQuery: SELECT 'x'
+  activemq:
+    broker-url: tcp://192.168.33.239:61617
+    in-memory: false
+    pool:
+      enabled: true
+      max-connections: 100
+
+
+#internal 程序内部
+logging:
+  config: classpath:log/logback-spring.xml
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+pagehelper:
+  reasonable: true
+
+#customer
+apikey:
+  ali:
+    - pool_key: FC1000xxxxxxxxxx
+    - file_path: /tmp
+    - key_id: LTAIoC4Iuyxxxx
+    - key_secret: jPtxnruaZGJ7HjbSdkwJdxxxxxxx
+    - dyplsapi: Dyplsapi
+    - domain: dyplsapi.aliyuncs.com
+
+  oss:
+    - endpoint: https://oss-cn-hangzhou.aliyuncs.com/
+    - access_id: LTAIzbAxxxxxxxxxx
+    - access_key: c3rLTtLv4qdR9m8kxxxxxxxxxxxx
+    - bucket_taxi: test-source
+    - oss_file_name: voiceRecording
+    - role_arn: acs:ram::114191736xxxxxxx:role/test-source-write

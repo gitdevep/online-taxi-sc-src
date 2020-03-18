@@ -1,0 +1,34 @@
+#common 通用
+server:
+  port: 8090
+spring:
+  activemq:
+    broker-url: tcp://192.168.68.123:61616
+    in-memory: false
+    pool:
+      enabled: true
+      max-connections: 100
+
+#internal 程序内部
+logging:
+  config: classpath:log/logback-spring.xml
+
+#最大连接数
+http:
+  maxTotal: 100
+  #并发数
+  defaultMaxPerRoute: 20
+  #创建连接的最长时间
+  connectTimeout: 1000
+  #从连接池中获取到连接的最长时间
+  connectionRequestTimeout: 500
+  #数据传输的最长时间
+  socketTimeout: 10000
+  #提交请求前测试连接是否可用
+  staleConnectionCheckEnabled: true
+
+gov:
+  #  生产环境
+  #  url:http://172.16.5.101:8080
+  #  测试环境
+  url: http://192.168.36.216:8765

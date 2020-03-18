@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.online.taxi.mapper.PassengerWalletRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.online.taxi.entity.PassengerWalletRecord" >
+    <id column="id" property="id" />
+    <result column="passenger_info_id" property="passengerInfoId" jdbcType="INTEGER" />
+    <result column="transaction_id" property="transactionId" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="pay_capital" property="payCapital" jdbcType="DOUBLE" />
+    <result column="pay_give_fee" property="payGiveFee" jdbcType="DOUBLE" />
+    <result column="refund_capital" property="refundCapital" jdbcType="DOUBLE" />
+    <result column="refund_give_fee" property="refundGiveFee" jdbcType="DOUBLE" />
+    <result column="recharge_discount" property="rechargeDiscount" jdbcType="DOUBLE" />
+    <result column="pay_type" property="payType" jdbcType="TINYINT" />
+    <result column="pay_status" property="payStatus" jdbcType="TINYINT" />
+    <result column="trade_type" property="tradeType" jdbcType="TINYINT" />
+    <result column="trade_reason" property="tradeReason" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, passenger_info_id, transaction_id, pay_time, pay_capital, pay_give_fee, refund_capital,refund_give_fee,recharge_discount,
+    pay_type, pay_status, trade_type, trade_reason, description, create_user,
+    order_id, create_time, update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_passenger_wallet_record
+    where id = #{id}
+  </select>
+
+  <!--根据订单Id查询 此订单已经支付过的记录-->
+  <select id="selectPaidRecordByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_passenger_wallet_record
+    where order_id = #{orderId} and pay_type = 2 and pay_status = 1 order by create_time desc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tbl_passenger_wallet_record
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insertSelective" parameterType="com.online.taxi.entity.PassengerWalletRecord" >
+    insert into tbl_passenger_wallet_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="passengerInfoId != null" >
+        passenger_info_id,
+      </if>
+
+      <if test="transactionId != null" >
+        transaction_id,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="payCapital != null" >
+        pay_capital,
+      </if>
+      <if test="payGiveFee != null" >
+        pay_give_fee,
+      </if>
+      <if test="refundCapital != null" >
+        refund_capital,
+      </if>
+      <if test="refundGiveFee != null" >
+        refund_give_fee,
+      </if>
+
+
+      <if test="rechargeDiscount != null" >
+        recharge_discount,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="tradeType != null" >
+        trade_type,
+      </if>
+      <if test="tradeReason != null" >
+        trade_reason,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="passengerInfoId != null" >
+        #{passengerInfoId},
+      </if>
+
+      <if test="transactionId != null" >
+        #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payCapital != null" >
+        #{payCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="payGiveFee != null" >
+        #{payGiveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="refundCapital != null" >
+        #{refundCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="refundGiveFee != null" >
+        #{refundGiveFee,jdbcType=DOUBLE},
+      </if>
+
+      <if test="rechargeDiscount != null" >
+        #{rechargeDiscount,jdbcType=DOUBLE},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=TINYINT},
+      </if>
+
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="tradeType != null" >
+        #{tradeType,jdbcType=TINYINT},
+      </if>
+      <if test="tradeReason != null" >
+        #{tradeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.online.taxi.entity.PassengerWalletRecord" >
+    update tbl_passenger_wallet_record
+    <set >
+      <if test="passengerInfoId != null" >
+        passenger_info_id = #{passengerInfoId},
+      </if>
+
+      <if test="transactionId != null" >
+        transaction_id = #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payCapital != null" >
+        pay_capital = #{payCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="payGiveFee != null" >
+        pay_give_fee = #{payGiveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="refundCapital != null" >
+        refund_capital = #{refundCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="refundGiveFee != null" >
+        refund_give_fee = #{refundGiveFee,jdbcType=DOUBLE},
+      </if>
+
+      <if test="rechargeDiscount != null" >
+        recharge_discount = #{rechargeDiscount,jdbcType=DOUBLE},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=TINYINT},
+      </if>
+
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="tradeType != null" >
+        trade_type = #{tradeType,jdbcType=TINYINT},
+      </if>
+      <if test="tradeReason != null" >
+        trade_reason = #{tradeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId},
+      </if>
+
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+</mapper>

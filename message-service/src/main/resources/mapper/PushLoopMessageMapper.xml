@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.online.taxi.mapper.PushLoopMessageMapper" >
+  <resultMap id="BaseResultMap" type="com.online.taxi.entity.PushLoopMessage" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="accept_identity" property="acceptIdentity" jdbcType="INTEGER" />
+    <result column="accept_id" property="acceptId" jdbcType="VARCHAR" />
+    <result column="message_type" property="messageType" jdbcType="INTEGER" />
+    <result column="message_body" property="messageBody" jdbcType="VARCHAR" />
+    <result column="read_flag" property="readFlag" jdbcType="INTEGER" />
+    <result column="send_id" property="sendId" jdbcType="VARCHAR" />
+    <result column="send_identity" property="sendIdentity" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="BaseResultMapDto" type="com.online.taxi.dto.push.PushLoopMessageDto" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="message_type" property="messageType" jdbcType="INTEGER" />
+    <result column="message_body" property="messageBody" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, accept_identity, accept_id, message_type, message_body, read_flag, send_id, send_identity,
+    create_time, expire_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tbl_push_loop_message
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <!--根据接受者身份 接受者Id查询消息列表-->
+  <select id="selectUnreadMessageListByIdentityAndAcceptId" parameterType="com.online.taxi.entity.PushLoopMessage" resultMap="BaseResultMapDto">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_push_loop_message
+    where read_flag = 0 and accept_id = #{acceptId} and accept_identity = #{acceptIdentity} and EXPIRE_TIME <![CDATA[> ]]> now()
+  </select>
+  <update id="updateReadById" parameterType="java.util.List">
+    update tbl_push_loop_message set read_flag = 1
+    where id in
+    <foreach collection="list" item="nos" open="(" separator="," close=")">
+      #{nos}
+    </foreach>
+  </update>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tbl_push_loop_message
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id" >
+    insert into tbl_push_loop_message
+    (id, accept_identity, accept_id, message_type, message_body, read_flag, send_id, send_identity,
+    create_time, expire_time)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.id}, #{item.acceptIdentity},#{item.acceptId},#{item.messageType},#{item.messageBody},#{item.readFlag},#{item.sendId},
+      #{item.sendIdentity},#{item.createTime},#{item.expireTime})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.online.taxi.entity.PushLoopMessage" useGeneratedKeys="true" keyProperty="id" >
+    insert into tbl_push_loop_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="acceptIdentity != null" >
+        accept_identity,
+      </if>
+      <if test="acceptId != null" >
+        accept_id,
+      </if>
+      <if test="messageType != null" >
+        message_type,
+      </if>
+      <if test="messageBody != null" >
+        message_body,
+      </if>
+      <if test="readFlag != null" >
+        read_flag,
+      </if>
+      <if test="sendId != null" >
+        send_id,
+      </if>
+      <if test="sendIdentity != null" >
+        send_identity,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="expireTime != null" >
+        expire_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="acceptIdentity != null" >
+        #{acceptIdentity},
+      </if>
+      <if test="acceptId != null" >
+        #{acceptId,jdbcType=VARCHAR},
+      </if>
+      <if test="messageType != null" >
+        #{messageType},
+      </if>
+      <if test="messageBody != null" >
+        #{messageBody,jdbcType=VARCHAR},
+      </if>
+      <if test="readFlag != null" >
+        #{readFlag},
+      </if>
+      <if test="sendId != null" >
+        #{sendId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendIdentity != null" >
+        #{sendIdentity,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null" >
+        #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.online.taxi.entity.PushLoopMessage" >
+    update tbl_push_loop_message
+    <set >
+      <if test="acceptIdentity != null" >
+        accept_identity = #{acceptIdentity},
+      </if>
+      <if test="acceptId != null" >
+        accept_id = #{acceptId,jdbcType=VARCHAR},
+      </if>
+      <if test="messageType != null" >
+        message_type = #{messageType},
+      </if>
+      <if test="messageBody != null" >
+        message_body = #{messageBody,jdbcType=VARCHAR},
+      </if>
+      <if test="readFlag != null" >
+        read_flag = #{readFlag},
+      </if>
+      <if test="sendId != null" >
+        send_id = #{sendId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendIdentity != null" >
+        send_identity = #{sendIdentity,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expireTime != null" >
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

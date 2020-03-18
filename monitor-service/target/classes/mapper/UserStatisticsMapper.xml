@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.UserStatisticsMapper">
+    <resultMap id="BaseResultMap" type="com.online.taxi.response.UserResponse">
+        <result column="day" property="day" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="serviceType" property="serviceType" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Day_List" >
+        <foreach collection="list" item="item" separator=" UNION ALL" open="(" close=")">
+            select #{item} day
+        </foreach>
+    </sql>
+    <select id="selectRegUserStatistics" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        count( t.id ) as count,
+        d.day
+        <choose>
+            <when test="equipment == 0">
+                ,(CASE register_type WHEN 'iOS' then 1 when 'Android' then 2 END) as type
+            </when>
+            <when test="equipment == 1">
+                ,'1' as type
+            </when>
+            <when test="equipment == 2">
+                ,'2' as type
+            </when>
+        </choose>
+        FROM  <include refid="Day_List" /> d left join
+        (
+        SELECT
+        t1.id
+        <if test="period == 1">
+            ,DATE_FORMAT( t1.create_time, '%Y-%m-%d' ) AS create_time
+        </if>
+        <if test="period == 2">
+            ,DATE_FORMAT( t1.create_time, '%Y-%m' ) AS create_time
+        </if>
+
+        <if test="equipment == 0">
+            ,t2.register_source register_type
+        </if>
+        FROM
+        tbl_passenger_info t1 left join tbl_passenger_register_source t2 on t1.id=t2.passenger_info_id
+        <where>
+            <if test="period == 1">
+                <![CDATA[ AND DATE_FORMAT( t1.create_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                <![CDATA[ AND DATE_FORMAT( t1.create_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+            </if>
+            <if test="period == 2">
+                <![CDATA[ AND DATE_FORMAT( t1.create_time, '%Y-%m' ) >= #{begin} ]]>
+                <![CDATA[ AND DATE_FORMAT( t1.create_time, '%Y-%m' ) <= #{end}]]>
+            </if>
+
+            <choose>
+                <when test="equipment != 0">
+                    AND t2.register_source = (case #{equipment} when 1 then 'iOS' when 2 then 'Android' end)
+                </when>
+                <when test="equipment == 0">
+                    AND t2.register_source in('iOS','Android')
+                </when>
+            </choose>
+        </where>
+        ) t on d.day = t.create_time
+        GROUP BY
+        d.day
+        <if test="equipment == 0">
+            ,register_type
+        </if>
+    </select>
+
+    <select id="placeAnOrderUserNumber" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select count(distinct passenger_info_id ) as count,
+        d.day
+        <choose>
+            <when test="equipment == 0">
+                ,source as type
+            </when>
+            <when test="equipment == 1">
+                ,'1' as type
+            </when>
+            <when test="equipment == 2">
+                ,'2' as type
+            </when>
+        </choose>
+        ,service_type as serviceType
+        from <include refid="Day_List" /> d left join
+        (select passenger_info_id,service_type
+        <if test="period == 1">
+            ,DATE_FORMAT( start_time, '%Y-%m-%d' ) AS start_time
+        </if>
+        <if test="period == 2">
+            ,DATE_FORMAT( start_time, '%Y-%m' ) AS start_time
+        </if>
+
+        <if test="equipment == 0">
+            ,(CASE WHEN source ='iOS' then 1 WHEN source ='ios' then 1 when source ='Android' then 2 END) as source
+        </if>
+        from tbl_order where status IN (6,7,8)
+
+        <if test="period == 1">
+            <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+            <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+        </if>
+        <if test="period == 2">
+            <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m' ) >= #{begin} ]]>
+            <![CDATA[ AND DATE_FORMAT( start_time, '%Y-%m' ) <= #{end}]]>
+        </if>
+
+        <choose>
+            <when test="equipment == 0">
+                and source in('iOS','ios','Android')
+            </when>
+            <when test="equipment == 1">
+                and source in('iOS','ios')
+            </when>
+            <when test="equipment == 2">
+                and source = 'Android'
+            </when>
+        </choose>
+        ) t on d.day = t.start_time
+        GROUP BY d.day,t.service_type
+        <if test="equipment == 0">
+            ,t.source
+        </if>
+    </select>
+
+    <select id="activeUserNumber" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        count( t.id ) as count,
+        d.day
+        <if test="equipment!=null">
+            <if test="equipment == 0">
+                ,(CASE register_type WHEN 'iOS' then 1 when 'Android' then 2 END) as type
+            </if>
+            <if test="equipment == 1">
+                ,'1' as type
+            </if>
+            <if test="equipment == 2">
+                ,'2' as type
+            </if>
+        </if>
+        FROM <include refid="Day_List" /> d left join
+        (
+        SELECT
+        t1.id,
+        t2.register_source register_type
+        <if test="period != null">
+            <if test="period == 1">
+                ,DATE_FORMAT( t1.last_login_time, '%Y-%m-%d' ) AS last_login_time
+            </if>
+            <if test="period == 2">
+                ,DATE_FORMAT( t1.last_login_time, '%Y-%m' ) AS last_login_time
+            </if>
+        </if>
+        FROM
+        tbl_passenger_info t1 left join tbl_passenger_register_source t2 on t1.id=t2.passenger_info_id
+        <where>
+            <if test="period != null">
+                <if test="period == 1">
+                    <![CDATA[ AND DATE_FORMAT( t1.last_login_time, '%Y-%m-%d') >= DATE_FORMAT(#{begin}, '%Y-%m-%d') ]]>
+                    <![CDATA[ AND DATE_FORMAT( t1.last_login_time, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d') ]]>
+                </if>
+                <if test="period == 2">
+                    <![CDATA[ AND DATE_FORMAT( t1.last_login_time, '%Y-%m' ) >= #{begin} ]]>
+                    <![CDATA[ AND DATE_FORMAT( t1.last_login_time, '%Y-%m' ) <= #{end}]]>
+                </if>
+            </if>
+
+            <if test="equipment!=null">
+                <if test="equipment != 0">
+                    AND t2.register_source = (case #{equipment} when 1 then 'iOS' when 2 then 'Android' end)
+                </if>
+                <if test="equipment == 0">
+                    AND t2.register_source in('iOS','Android')
+                </if>
+            </if>
+        </where>
+        ) t on d.day = t.last_login_time
+        GROUP BY
+        d.day
+        <if test="equipment!=null">
+            <if test="equipment == 0">
+                ,register_type
+            </if>
+        </if>
+    </select>
+</mapper>

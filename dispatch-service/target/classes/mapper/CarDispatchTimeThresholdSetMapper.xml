@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.online.taxi.mapper.CarDispatchTimeThresholdSetMapper">
+    <resultMap id="BaseResultMap" type="com.online.taxi.entity.CarDispatchTimeThresholdSet">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR"/>
+        <result column="service_type_id" property="serviceTypeId" jdbcType="INTEGER"/>
+        <result column="time_threshold_type" property="timeThresholdType" jdbcType="BIT"/>
+        <result column="time_threshold" property="timeThreshold" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, city_code, service_type_id, time_threshold_type, time_threshold, create_time,
+        update_time
+    </sql>
+    <select id="selectByCityAndServiceType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_car_dispatch_time_threshold_set
+        where city_code = #{cityCode} and time_threshold_type=#{type}
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_car_dispatch_time_threshold_set
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from tbl_car_dispatch_time_threshold_set
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.online.taxi.entity.CarDispatchTimeThresholdSet">
+        insert into tbl_car_dispatch_time_threshold_set (id, city_code, service_type_id,
+        time_threshold_type, time_threshold, create_time,
+        update_time)
+        values (#{id,jdbcType=INTEGER}, #{cityCode,jdbcType=VARCHAR}, #{serviceTypeId,jdbcType=INTEGER},
+        #{timeThresholdType,jdbcType=BIT}, #{timeThreshold,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.online.taxi.entity.CarDispatchTimeThresholdSet">
+        insert into tbl_car_dispatch_time_threshold_set
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="serviceTypeId != null">
+                service_type_id,
+            </if>
+            <if test="timeThresholdType != null">
+                time_threshold_type,
+            </if>
+            <if test="timeThreshold != null">
+                time_threshold,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceTypeId != null">
+                #{serviceTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="timeThresholdType != null">
+                #{timeThresholdType,jdbcType=BIT},
+            </if>
+            <if test="timeThreshold != null">
+                #{timeThreshold,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.online.taxi.entity.CarDispatchTimeThresholdSet">
+        update tbl_car_dispatch_time_threshold_set
+        <set>
+            <if test="cityCode != null">
+                city_code = #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceTypeId != null">
+                service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="timeThresholdType != null">
+                time_threshold_type = #{timeThresholdType,jdbcType=BIT},
+            </if>
+            <if test="timeThreshold != null">
+                time_threshold = #{timeThreshold,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.online.taxi.entity.CarDispatchTimeThresholdSet">
+        update tbl_car_dispatch_time_threshold_set
+        set city_code = #{cityCode,jdbcType=VARCHAR},
+        service_type_id = #{serviceTypeId,jdbcType=INTEGER},
+        time_threshold_type = #{timeThresholdType,jdbcType=BIT},
+        time_threshold = #{timeThreshold,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

@@ -1,0 +1,16 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.online.taxi.utils.AliPhoneConfig",
+      "name": "apikey",
+      "type": "com.online.taxi.utils.AliPhoneConfig"
+    },
+    {
+      "sourceType": "com.online.taxi.utils.OssApiConfig",
+      "name": "apikey",
+      "type": "com.online.taxi.utils.OssApiConfig"
+    }
+  ],
+  "properties": []
+}

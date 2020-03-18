@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.RatedMapper">
+    <select id="selectRatedPassenger" resultType="com.online.taxi.dto.rated.RatedPassengerDto">
+        SELECT
+            t2.order_number,
+            t1.update_time,
+            t1.grade
+        FROM
+            tbl_evaluate_driver t1
+            INNER JOIN tbl_order t2 ON t1.order_id = t2.id
+        WHERE
+            t1.order_id = #{id}
+            AND t1.grade > 1
+	</select>
+
+    <select id="selectRatedPassengerComplaint" resultType="com.online.taxi.dto.rated.RatedPassengerComplaintDto">
+         SELECT
+            t2.order_number,
+            t1.update_time,
+            t1.content
+        FROM
+            tbl_evaluate_driver t1
+            INNER JOIN tbl_order t2 ON t1.order_id = t2.id
+        WHERE
+            t1.order_id = #{id}
+            AND t1.grade = 1
+    </select>
+
+    <select id="selectRatedDrivers" resultType="com.online.taxi.dto.rated.RatedDriverDto">
+        SELECT
+            driver_id,
+            FLOOR(AVG(grade)) AS GRADE
+        FROM
+            tbl_evaluate_driver
+        WHERE
+            date_format(update_time, '%Y%m') = date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH), '%Y%m')
+        GROUP BY
+            driver_id
+    </select>
+
+    <select id="selectRatedDriver" resultType="com.online.taxi.dto.rated.RatedDriverDto">
+        SELECT
+            t2.id,
+            t2.driver_id,
+            t1.driving_licence_number,
+            t2.grade,
+            t2.test_date,
+            t2.test_department
+        FROM
+            tbl_driver_base_info t1
+            INNER JOIN tbl_driver_rate t2 ON t1.id = t2.driver_id
+        WHERE
+            t2.id = #{id}
+	    </select>
+
+    <select id="selectRatedDriverPunish" resultType="com.online.taxi.dto.rated.RatedDriverPunishDto">
+        SELECT
+            t1.id,
+            t1.driver_id,
+            t1.punish_time,
+            t1.punish_result,
+            t2.driving_licence_number
+        FROM
+            tbl_driver_punish t1
+            INNER JOIN tbl_driver_base_info t2 ON t1.driver_id = t2.id
+        WHERE
+            t1.id = #{id}
+    </select>
+</mapper>

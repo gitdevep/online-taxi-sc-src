@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.online.taxi.mapper.PassengerWalletMapper">
+  <resultMap id="BaseResultMap" type="com.online.taxi.entity.PassengerWallet">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="passenger_info_id" jdbcType="INTEGER" property="passengerInfoId" />
+    <result column="capital" jdbcType="DOUBLE" property="capital" />
+    <result column="give_fee" jdbcType="DOUBLE" property="giveFee" />
+    <result column="freeze_capital" jdbcType="DOUBLE" property="freezeCapital" />
+    <result column="freeze_give_fee" jdbcType="DOUBLE" property="freezeGiveFee" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, passenger_info_id, capital, give_fee, freeze_capital, freeze_give_fee, create_time, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_passenger_wallet
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPassengerInfoId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_passenger_wallet
+    where passenger_info_id = #{passengerInfoId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_passenger_wallet
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.online.taxi.entity.PassengerWallet">
+    insert into tbl_passenger_wallet (id, passenger_info_id, capital, 
+      give_fee, freeze_capital, freeze_give_fee, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{passengerInfoId,jdbcType=INTEGER}, #{capital,jdbcType=DOUBLE}, 
+      #{giveFee,jdbcType=DOUBLE}, #{freezeCapital,jdbcType=DOUBLE}, #{freezeGiveFee,jdbcType=DOUBLE}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.online.taxi.entity.PassengerWallet">
+    insert into tbl_passenger_wallet
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="passengerInfoId != null">
+        passenger_info_id,
+      </if>
+      <if test="capital != null">
+        capital,
+      </if>
+      <if test="giveFee != null">
+        give_fee,
+      </if>
+      <if test="freezeCapital != null">
+        freeze_capital,
+      </if>
+      <if test="freezeGiveFee != null">
+        freeze_give_fee,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="passengerInfoId != null">
+        #{passengerInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="capital != null">
+        #{capital,jdbcType=DOUBLE},
+      </if>
+      <if test="giveFee != null">
+        #{giveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="freezeCapital != null">
+        #{freezeCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="freezeGiveFee != null">
+        #{freezeGiveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+      SELECT LAST_INSERT_ID() AS id
+    </selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.online.taxi.entity.PassengerWallet">
+    update tbl_passenger_wallet
+    <set>
+      <if test="passengerInfoId != null">
+        passenger_info_id = #{passengerInfoId,jdbcType=INTEGER},
+      </if>
+      <if test="capital != null">
+        capital = #{capital,jdbcType=DOUBLE},
+      </if>
+      <if test="giveFee != null">
+        give_fee = #{giveFee,jdbcType=DOUBLE},
+      </if>
+      <if test="freezeCapital != null">
+        freeze_capital = #{freezeCapital,jdbcType=DOUBLE},
+      </if>
+      <if test="freezeGiveFee != null">
+        freeze_give_fee = #{freezeGiveFee,jdbcType=DOUBLE},
+      </if>
+
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.online.taxi.entity.PassengerWallet">
+    update tbl_passenger_wallet
+    set passenger_info_id = #{passengerInfoId,jdbcType=INTEGER},
+      capital = #{capital,jdbcType=DOUBLE},
+      give_fee = #{giveFee,jdbcType=DOUBLE},
+      freeze_capital = #{freezeCapital,jdbcType=DOUBLE},
+      freeze_give_fee = #{freezeGiveFee,jdbcType=DOUBLE},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateBalanceByPassengerInfoId" parameterType="java.util.Map">
+    update tbl_passenger_wallet
+    set capital = #{capitalNew},
+      give_fee = #{giveFeeNew}
+    where passenger_info_id = #{passengerInfoId} and capital = #{capitalOld} and give_fee = #{giveFeeOld}
+  </update>
+
+  <update id="unfreezeBalanceByPassengerInfoId" parameterType="java.util.Map">
+    update tbl_passenger_wallet
+    set capital = #{capitalNew},
+      give_fee = #{giveFeeNew},
+      freeze_capital = #{freezeCapitalNew},
+      freeze_give_fee = #{freezeGiveFeeNew}
+    where passenger_info_id = #{passengerInfoId}
+    and capital = #{capitalOld} and give_fee = #{giveFeeOld}
+    and freeze_capital = #{freezeCapitalOld} and freeze_give_fee = #{freezeGiveFeeOld}
+  </update>
+</mapper>
